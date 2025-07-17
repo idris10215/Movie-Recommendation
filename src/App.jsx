@@ -3,9 +3,10 @@ import "./App.css";
 import Search from "./components/Search";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [searchTerm, setsearchTerm] = useState("")
 
   return (
+    
     <main>
       <div className="pattern" />
 
@@ -15,7 +16,7 @@ function App() {
           <h1>Find <span className="text-gradient">Movies</span> That You'll Enjoy Without The Hastle</h1>
         </header>
 
-        <Search />
+        <Search searchTerm={searchTerm} setsearchTerm={setsearchTerm} />
       </div>
     </main>
   );
