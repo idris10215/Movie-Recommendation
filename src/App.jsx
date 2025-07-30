@@ -4,6 +4,7 @@ import Search from "./components/Search";
 import Spinner from "./components/Spinner"
 import MovieCard from "./components/MovieCard";
 import { useDebounce } from "react-use";
+import { getTrendingMovies, updateSearchCount } from "./appwrite";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
@@ -23,6 +24,7 @@ function App() {
   const [movieList, setmovieList] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [deBounceSearchTerm, setdeBounceSearchTerm] = useState("");
+  // const [trendingMovies, settrendingMovies] = useState([]);
 
   useDebounce(() => setdeBounceSearchTerm(searchTerm),500,[searchTerm]);
 
@@ -53,6 +55,12 @@ function App() {
 
       setmovieList(data.results || [])
 
+      if (query && data.results.length > 0) {
+
+        await updateSearchCount(query, data.results[0]);
+        
+      }
+
     } catch (error) {
       console.error(`Error fetching movies! ${error}`)
       seterrorMessage("Error fetching MOvies. Please try again later");
@@ -61,9 +69,25 @@ function App() {
     }
   }
 
+  // const loadTrendingMovies = async () => {
+  //   try {
+
+  //     const movies = await getTrendingMovies();
+
+  //     settrendingMovies(movies);
+      
+  //   } catch (error) {
+  //       console.log(error);
+  //   }
+  // }
+
   useEffect(() => {
     fetchMovies(deBounceSearchTerm);
   },[deBounceSearchTerm])
+
+  // useEffect(() => {
+  //   loadTrendingMovies();
+  // },[])
 
   return (
     
@@ -78,8 +102,26 @@ function App() {
           <Search searchTerm={searchTerm} setsearchTerm={setsearchTerm} />
         </header>
 
+        {/* {trendingMovies.length > 0 && (
+          <section className="trending">
+
+            <h2>Trending Movies</h2>
+
+            <ul>
+              {trendingMovies.map((movie, index) => {
+
+                <li key={movie.$id}>
+                  <p>{index + 1}</p>
+                </li>
+
+              })}
+            </ul>
+
+          </section>
+        )} */}
+
         <section  className="all-movies">
-          <h1 className="mt-[2rem]"> All Movies</h1>
+          <h1 > All Movies</h1>
 
           {isLoading ? (
             <Spinner />
